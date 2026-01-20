@@ -3,11 +3,20 @@ html, body { height: 100%; }
 body { margin: 0; color: #111; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
 
 #canvas { position: fixed; inset: 0; display: block; width: 100vw; height: 100vh; z-index: 1; }
-#helpBtn { position: fixed; top: 12px; left: 12px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
-#helpBtn:hover { background: rgba(0,0,0,0.1); }
+/* Top-left circular toolbar buttons */
+#helpBtn { position: fixed; top: 12px; left: 12px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: #fff; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#helpBtn:hover { background: rgba(255,255,255,0.12); }
 /* Paragraphs button */
-#paraBtn { position: fixed; top: 12px; left: 48px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
-#paraBtn:hover { background: rgba(0,0,0,0.1); }
+#paraBtn { position: fixed; top: 12px; left: 48px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: #fff; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#paraBtn:hover { background: rgba(255,255,255,0.12); }
+/* Music toggle button */
+#musicBtn { position: fixed; top: 12px; left: 84px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: #fff; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#musicBtn:hover { background: rgba(255,255,255,0.12); }
+/* Extra toolbar buttons */
+#saveBtn { position: fixed; top: 12px; left: 120px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: #fff; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#saveBtn:hover { background: rgba(255,255,255,0.12); }
+#clearBtn { position: fixed; top: 12px; left: 156px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: #fff; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#clearBtn:hover { background: rgba(255,255,255,0.12); }
 
 /* Help modal overlay */
 #helpModal { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 180ms ease; }
@@ -41,19 +50,37 @@ body { margin: 0; color: #111; font-family: system-ui, -apple-system, Segoe UI, 
 #mascotSvg #m-eyes circle { fill: #222; }
 #mascotSvg .acc { display: none; fill: #222; stroke: none; }
 
-#stats { position: fixed; bottom: 0; left: 0; right: 0; height: 40px; display: flex; gap: 16px; align-items: center; justify-content: center; padding: 0 12px; backdrop-filter: blur(6px); z-index: 5; border-top: 2px solid rgba(0,0,0,0.35); background: rgba(0,0,0,0.08); box-shadow: 0 -1px 0 rgba(255,255,255,0.6); }
-#stats span { min-width: 120px; text-align: center; line-height: 40px; }
+#stats { position: fixed; bottom: 0; left: 0; right: 0; height: 28px; display: flex; gap: 12px; align-items: center; justify-content: center; padding: 0 10px; backdrop-filter: blur(6px); z-index: 5; border-top: 1px solid rgba(255,255,255,0.35); background: rgba(0,0,0,0.12); box-shadow: 0 -1px 0 rgba(0,0,0,0.3); font-size: 13px; }
+#stats span { min-width: 110px; text-align: center; line-height: 28px; }
 
-/* Shape selection panel */
-#shapePanel { position: fixed; top: 12px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
-#shapePanel select { padding: 4px 6px; border: 1px solid rgba(0,0,0,0.2); border-radius: 6px; }
+/* Shape selection panel (pill style) */
+#shapePanel { position: fixed; top: 12px; right: 12px; z-index: 3; background: rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.22); color: #fff; backdrop-filter: blur(6px); border-radius: 12px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset; }
+#shapePanel label { opacity: .95; font-weight: 600; font-size: 14px; }
+#shapePanel select { padding: 3px 8px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: rgba(0,0,0,0.2); color: #fff; font-size: 14px; }
 
-/* Theme selection panel */
-#themePanel { position: fixed; top: 56px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
-#themePanel select { padding: 4px 6px; border: 1px solid rgba(0,0,0,0.2); border-radius: 6px; }
-.refresh-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.9; }
-.refresh-toggle input { accent-color: #333; }
+/* Theme selection panel (pill style) */
+#themePanel { position: fixed; top: 56px; right: 12px; z-index: 3; background: rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.22); color: #fff; backdrop-filter: blur(6px); border-radius: 12px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset; }
+#themePanel label { opacity: .95; font-weight: 600; font-size: 14px; }
+#themePanel select { padding: 3px 8px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: rgba(0,0,0,0.2); color: #fff; font-size: 14px; }
+.refresh-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.95; margin-left: 6px; }
+.refresh-toggle input { accent-color: #cfcfcf; }
 
-/* Image controls panel */
-#imagePanel { position: fixed; top: 100px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
-#imagePanel input[type="file"] { max-width: 160px; }
+/* Image controls panel (pill style) */
+#imagePanel { position: fixed; top: 100px; right: 12px; z-index: 3; background: rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.22); color: #fff; backdrop-filter: blur(6px); border-radius: 12px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset; }
+#imagePanel input[type="file"] { max-width: 170px; color: #fff; font-size: 14px; }
+
+/* Freehand sketch panel (pill style) */
+#sketchPanel { position: fixed; top: 144px; right: 12px; z-index: 3; background: rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.22); color: #fff; backdrop-filter: blur(6px); border-radius: 12px; padding: 8px 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset; width: auto; white-space: nowrap; }
+#sketchPanel strong { font-size: 13px; letter-spacing: .2px; opacity: .95; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,0.05); }
+.active#sketchPanel strong, #sketchPanel.active strong { background: rgba(255,255,255,0.12); }
+.sketch-row { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+#brushSize { width: 120px; accent-color: #bfbfbf; }
+#brushColor { width: 56px; height: 24px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.2); }
+
+/* Range styling (WebKit/Chromium) */
+input[type="range"]::-webkit-slider-runnable-track { height: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #dcdcdc; margin-top: -5px; border: 1px solid rgba(0,0,0,0.25); }
+/* Firefox */
+input[type="range"] { height: 8px; }
+input[type="range"]::-moz-range-track { height: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #dcdcdc; border: 1px solid rgba(0,0,0,0.25); }

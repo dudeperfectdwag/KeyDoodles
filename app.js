@@ -78,7 +78,11 @@ console.log("APP JS LOADED");
       });
       const autoToggle = document.getElementById('autoRefreshToggle');
       const autoSaved = localStorage.getItem('autoRefreshOnThemeChange');
-      if (autoToggle) autoToggle.checked = autoSaved === 'true';
+      if (autoToggle) {
+        // default ON if unset to mirror screenshot behavior
+        if (autoSaved == null) localStorage.setItem('autoRefreshOnThemeChange','true');
+        autoToggle.checked = (localStorage.getItem('autoRefreshOnThemeChange') === 'true');
+      }
       if (autoToggle){
         autoToggle.addEventListener('change', () => {
           localStorage.setItem('autoRefreshOnThemeChange', autoToggle.checked ? 'true' : 'false');
@@ -109,26 +113,23 @@ console.log("APP JS LOADED");
     const imagePanel = document.getElementById('imagePanel');
     const helpBtn = document.getElementById('helpBtn');
     const paraBtn = document.getElementById('paraBtn');
+    const musicBtn = document.getElementById('musicBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
     const paraModal = document.getElementById('paraModal');
     const paragraphView = document.getElementById('paragraphView');
     if (stats){ stats.style.background = t.subtleUI; stats.style.color = t.text; stats.style.borderTopColor = t.text + '22'; }
     if (shapePanel){ shapePanel.style.background = t.subtleUI; shapePanel.style.color = t.text; shapePanel.style.borderColor = t.text + '22'; }
     if (themePanel){ themePanel.style.background = t.subtleUI; themePanel.style.color = t.text; themePanel.style.borderColor = t.text + '22'; }
     if (imagePanel){ imagePanel.style.background = t.subtleUI; imagePanel.style.color = t.text; imagePanel.style.borderColor = t.text + '22'; }
-    if (helpBtn){
-      const lum = hexLuminance(t.background);
-      const outline = lum < 0.35 ? '#ffffff' : '#666666';
-      helpBtn.style.borderColor = outline;
-      helpBtn.style.color = outline;
-      helpBtn.style.boxShadow = `0 0 0 1px ${outline}`;
+    const sketchPanel = document.getElementById('sketchPanel');
+    if (sketchPanel){ sketchPanel.style.background = t.subtleUI; sketchPanel.style.color = t.text; sketchPanel.style.borderColor = t.text + '22'; }
+    const lum = hexLuminance(t.background);
+    const outline = lum < 0.35 ? '#ffffff' : '#444444';
+    function styleRound(btn){
+      if (!btn) return; btn.style.borderColor = outline; btn.style.color = outline; btn.style.boxShadow = `0 0 0 1px ${outline}`; btn.style.background = 'transparent';
     }
-    if (paraBtn){
-      const lum = hexLuminance(t.background);
-      const outline = lum < 0.35 ? '#ffffff' : '#666666';
-      paraBtn.style.borderColor = outline;
-      paraBtn.style.color = outline;
-      paraBtn.style.boxShadow = `0 0 0 1px ${outline}`;
-    }
+    styleRound(helpBtn); styleRound(paraBtn); styleRound(musicBtn); styleRound(saveBtn); styleRound(clearBtn);
     if (paraModal){
       const hc = paraModal.querySelector('.help-content');
       if (hc){
@@ -154,6 +155,9 @@ console.log("APP JS LOADED");
     }
     // Future strokes use paintColor
     paintColor = t.paint;
+    // sync brush color default to theme paint if user hasn't changed it
+    const brushColor = document.getElementById('brushColor');
+    if (brushColor && !brushColor.dataset.userPicked){ brushColor.value = t.paint; }
     // Ensure canvas background is repainted from theme on next frames
     setMascotTheme(t);
   }
@@ -187,8 +191,9 @@ console.log("APP JS LOADED");
   const minSegment = 3;          // min movement before adding a trail point
 
   // Strict sizing per requirements
+  const statsBarHeight = 28;
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 40; // account for fixed stats bar
+  canvas.height = window.innerHeight - statsBarHeight; // account for fixed stats bar
   // Fill canvas with initial theme background without recreating canvas
   const initThemeName = localStorage.getItem('themeName') || 'Light';
   const initTheme = (THEMES || []).find(t => t.name === initThemeName) || { background: '#ffffff', paint: '#000000', text: '#111', subtleUI: 'rgba(0,0,0,0.06)' };
@@ -530,6 +535,65 @@ console.log("APP JS LOADED");
     requestAnimationFrame(tick);
   }
 
+  // Freehand sketch mode
+  (function(){
+    const sizeEl = document.getElementById('brushSize');
+    const colorEl = document.getElementById('brushColor');
+    const toggleEl = document.getElementById('freehandToggle'); // may not exist anymore
+    const panel = document.getElementById('sketchPanel');
+    const toggleBtn = document.getElementById('sketchToggle');
+    if (!sizeEl || !colorEl || !panel) return;
+    let isDrawing = false; let lastX = 0, lastY = 0; let freehandOn = false;
+    function getBrush(){
+      const s = Math.max(1, Math.min(80, parseInt(sizeEl.value||'10',10)));
+      const c = colorEl.value || paintColor;
+      return { s, c };
+    }
+    colorEl.addEventListener('input', ()=>{ colorEl.dataset.userPicked = '1'; });
+    sizeEl.addEventListener('input', ()=>{});
+    function setFreehand(on){ freehandOn = !!on; panel.classList.toggle('active', freehandOn); }
+    if (toggleEl) toggleEl.addEventListener('change', ()=> setFreehand(toggleEl.checked));
+    if (toggleBtn){
+      const handler = ()=> setFreehand(!freehandOn);
+      toggleBtn.addEventListener('click', handler);
+      toggleBtn.addEventListener('keydown', (e)=>{ if (e.key==='Enter' || e.key===' ') { e.preventDefault(); handler(); } });
+    } else {
+      panel.addEventListener('click', (e)=>{ if (e.target === colorEl || e.target === sizeEl) return; setFreehand(!freehandOn); });
+    }
+    canvas.addEventListener('mousedown', (e)=>{
+      if (!freehandOn) return;
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      lastX = e.clientX - rect.left; lastY = e.clientY - rect.top;
+    });
+    window.addEventListener('mouseup', ()=>{ isDrawing = false; });
+    canvas.addEventListener('mousemove', (e)=>{
+      if (!isDrawing || !freehandOn) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+      const { s, c } = getBrush();
+      ctx.save();
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = c; ctx.lineWidth = s * strokeScale;
+      ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+      ctx.restore();
+      lastX = x; lastY = y;
+    });
+    // Touch support
+    canvas.addEventListener('touchstart', (e)=>{
+      if (!freehandOn) return; const t=e.touches[0]; if(!t) return;
+      isDrawing = true; const rect = canvas.getBoundingClientRect(); lastX = t.clientX-rect.left; lastY=t.clientY-rect.top; e.preventDefault();
+    }, {passive:false});
+    canvas.addEventListener('touchend', ()=>{ isDrawing = false; });
+    canvas.addEventListener('touchmove', (e)=>{
+      if (!isDrawing || !freehandOn) return; const t=e.touches[0]; if(!t) return;
+      const rect = canvas.getBoundingClientRect(); const x=t.clientX-rect.left; const y=t.clientY-rect.top;
+      const { s, c } = getBrush();
+      ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=c; ctx.lineWidth=s*strokeScale;
+      ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); ctx.restore(); lastX=x; lastY=y; e.preventDefault();
+    }, {passive:false});
+  })();
+
   // Mascot theming and accessory per theme
   function setMascotTheme(t){
     const svg = document.getElementById('mascotSvg');
@@ -650,6 +714,65 @@ console.log("APP JS LOADED");
   helpBtn.addEventListener('click', openModal);
   closeBtn && closeBtn.addEventListener('click', closeModal);
   backdrop && backdrop.addEventListener('click', closeModal);
+})();
+
+// Toolbar actions: music, save, clear
+(function(){
+  const TC = window.__TC; if (!TC) return;
+  const musicBtn = document.getElementById('musicBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  // Simple ambient audio using Web Audio API (no external files)
+  (function(){
+    let ctx = null, gain = null, nodes = [];
+    function create(){
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!gain){ gain = ctx.createGain(); gain.gain.value = 0.02; gain.connect(ctx.destination); }
+      if (nodes.length === 0){
+        const osc1 = ctx.createOscillator(); osc1.type = 'sine'; osc1.frequency.value = 220;
+        const osc2 = ctx.createOscillator(); osc2.type = 'sine'; osc2.frequency.value = 330;
+        const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.2;
+        const lfoGain = ctx.createGain(); lfoGain.gain.value = 30; lfo.connect(lfoGain); lfoGain.connect(osc1.frequency);
+        osc1.connect(gain); osc2.connect(gain);
+        nodes = [osc1, osc2, lfo];
+      }
+    }
+    function start(){
+      create();
+      if (ctx.state === 'suspended') ctx.resume();
+      nodes.forEach(n=>{ try{ n.start && n.start(); }catch{} });
+    }
+    function stop(){ if (ctx) ctx.suspend(); }
+    window.__MUSIC = {
+      start, stop,
+      get enabled(){ return !!ctx && ctx.state === 'running'; }
+    };
+  })();
+  if (musicBtn){
+    const saved = localStorage.getItem('musicOn') === 'true';
+    const setIcon = (on)=>{ musicBtn.textContent = on ? '🔊' : '🔇'; };
+    setIcon(saved);
+    if (saved) { try{ window.__MUSIC.start(); }catch{} }
+    musicBtn.addEventListener('click', async ()=>{
+      const on = localStorage.getItem('musicOn') === 'true';
+      if (on){ window.__MUSIC.stop(); localStorage.setItem('musicOn','false'); setIcon(false); }
+      else { try{ await window.__MUSIC.start(); }catch{} localStorage.setItem('musicOn','true'); setIcon(true); }
+    });
+  }
+  if (saveBtn){
+    saveBtn.addEventListener('click', ()=>{
+      try{
+        const url = TC.canvas.toDataURL('image/png');
+        const a = document.createElement('a'); a.href = url; a.download = 'typing-canvas.png'; a.click();
+      }catch(err){ console.error('Save failed', err); }
+    });
+  }
+  if (clearBtn){
+    clearBtn.addEventListener('click', ()=>{
+      const t = TC.theme || {background:'#ffffff'};
+      const ctx = TC.ctx; ctx.save(); ctx.globalCompositeOperation='source-over'; ctx.fillStyle=t.background; ctx.fillRect(0,0,TC.canvas.width,TC.canvas.height); ctx.restore();
+    });
+  }
 })();
 
 // Paragraph Mode

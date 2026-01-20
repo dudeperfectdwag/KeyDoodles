@@ -10,6 +10,9 @@
   <body>
     <button id="helpBtn" aria-label="Help" title="Help">?</button>
     <button id="paraBtn" aria-label="Paragraphs" title="Paragraphs">¶</button>
+    <button id="musicBtn" aria-label="Music" title="Music">🔇</button>
+    <button id="saveBtn" aria-label="Download Image" title="Download Image">⭳</button>
+    <button id="clearBtn" aria-label="Remove Paint" title="Remove Paint">⟳</button>
     <canvas id="canvas"></canvas>
      <div id="shapePanel" aria-label="Shape selection">
        <label for="shapeSelect">Shape:</label>
@@ -58,6 +61,12 @@
       <label for="mascotImageInput">Mascot image:</label>
       <input id="mascotImageInput" type="file" accept="image/*" />
     </div>
+      <!-- Freehand controls -->
+      <div id="sketchPanel" aria-label="Freehand sketch controls">
+        <strong id="sketchToggle" tabindex="0" role="button" title="Toggle Freehand Sketch Mode">Freehand Sketch Mode</strong>
+        <label class="sketch-row">Size <input id="brushSize" type="range" min="1" max="40" step="1" value="10" /></label>
+        <label class="sketch-row">Color <input id="brushColor" type="color" value="#00ff00" /></label>
+      </div>
     <div id="helpModal" aria-hidden="true">
       <div class="help-backdrop"></div>
       <div class="help-content" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
@@ -73,8 +82,24 @@
         </ul>
         <h3>Shapes</h3>
         <p>Use the Shape selector to choose what draws at the dot’s position. You can also use [ and ] to cycle, and number keys (1–9) for quick picks.</p>
+        <h3>Freehand</h3>
+        <ul>
+          <li>Click the “Freehand Sketch Mode” pill to toggle on/off.</li>
+          <li>Adjust brush <strong>Size</strong> and <strong>Color</strong> while drawing.</li>
+          <li>Works alongside typing art; mouse/touch draws when enabled.</li>
+        </ul>
         <h3>Themes</h3>
         <p>Use the Theme selector to change background and paint colors instantly across the canvas and UI. Your choice is saved to localStorage.</p>
+        <h3>Music</h3>
+        <p>Use the top-left speaker button (🔇/🔊) to toggle ambient audio. Your preference is remembered between visits.</p>
+        <h3>Toolbar</h3>
+        <ul>
+          <li>?: Open this info.</li>
+          <li>¶: Paragraph mode selector.</li>
+          <li>🔇/🔊: Music off/on toggle.</li>
+          <li>⭳: Download a PNG of the current canvas.</li>
+          <li>⟳: Remove paint (clear the canvas background to the current theme).</li>
+        </ul>
         <h3>Tips</h3>
         <ul>
           <li>Type faster to steer more dynamically.</li>
