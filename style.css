@@ -1,0 +1,59 @@
+/* Base minimal styles */
+html, body { height: 100%; }
+body { margin: 0; color: #111; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+
+#canvas { position: fixed; inset: 0; display: block; width: 100vw; height: 100vh; z-index: 1; }
+#helpBtn { position: fixed; top: 12px; left: 12px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#helpBtn:hover { background: rgba(0,0,0,0.1); }
+/* Paragraphs button */
+#paraBtn { position: fixed; top: 12px; left: 48px; z-index: 4; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; display: grid; place-items: center; font-weight: 600; }
+#paraBtn:hover { background: rgba(0,0,0,0.1); }
+
+/* Help modal overlay */
+#helpModal { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 180ms ease; }
+#helpModal.open { pointer-events: auto; opacity: 1; }
+.help-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.35); }
+.help-content { position: absolute; top: 48px; left: 50%; transform: translateX(-50%); width: min(720px, 92vw); max-height: 70vh; overflow: auto; background: rgba(255,255,255,0.92); color: #111; border: 1px solid rgba(0,0,0,0.15); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); backdrop-filter: blur(6px); padding: 16px 18px; }
+#paraModal { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 180ms ease; }
+#paraModal.open { pointer-events: auto; opacity: 1; }
+#paraList { display: grid; gap: 10px; }
+#paraList .para-item { border: 1px solid rgba(0,0,0,0.15); border-radius: 8px; padding: 10px; cursor: pointer; background: rgba(0,0,0,0.04); }
+#paraList .para-item:hover { background: rgba(0,0,0,0.08); }
+
+/* Right-side paragraph view */
+#paragraphView { position: fixed; top: 0; right: 0; width: min(35vw, 480px); height: 100vh; background: var(--pv-bg); color: var(--pv-text); border-left: 1px solid rgba(0,0,0,0.2); backdrop-filter: blur(6px); z-index: 4; transform: translateX(100%); transition: transform 200ms ease; display: flex; flex-direction: column; }
+#paragraphView.open { transform: translateX(0%); }
+#paragraphView .pv-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid rgba(0,0,0,0.2); }
+#pvText { padding: 12px; line-height: 1.6; font-size: 15px; overflow-y: auto; color: var(--pv-text); }
+.pv-done { background: var(--pv-done-bg); color: var(--pv-done-text); border-radius: 4px; }
+.pv-next { color: var(--pv-caret); background: var(--pv-next-bg); border-bottom: 2px solid var(--pv-caret); }
+.pv-remaining { color: var(--pv-remaining-text); }
+.help-close { position: absolute; top: 8px; right: 10px; width: 28px; height: 28px; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; border-radius: 6px; }
+.help-close:hover { background: rgba(0,0,0,0.1); }
+.help-content h2, .help-content h3 { margin: 8px 0; }
+.help-content p { margin: 8px 0; }
+.help-content ul { margin: 8px 0 0 18px; }
+
+/* Mascot positioning */
+#mascot { position: fixed; right: 12px; bottom: 56px; z-index: 3; pointer-events: none; }
+#mascotImg { position: absolute; right: 0; bottom: 0; width: 96px; height: 96px; object-fit: cover; border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+#mascotSvg #m-body rect { fill: rgba(0,0,0,0.12); stroke-width: 2; stroke: #222; }
+#mascotSvg #m-eyes circle { fill: #222; }
+#mascotSvg .acc { display: none; fill: #222; stroke: none; }
+
+#stats { position: fixed; bottom: 0; left: 0; right: 0; height: 40px; display: flex; gap: 16px; align-items: center; justify-content: center; padding: 0 12px; backdrop-filter: blur(6px); z-index: 5; border-top: 2px solid rgba(0,0,0,0.35); background: rgba(0,0,0,0.08); box-shadow: 0 -1px 0 rgba(255,255,255,0.6); }
+#stats span { min-width: 120px; text-align: center; line-height: 40px; }
+
+/* Shape selection panel */
+#shapePanel { position: fixed; top: 12px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
+#shapePanel select { padding: 4px 6px; border: 1px solid rgba(0,0,0,0.2); border-radius: 6px; }
+
+/* Theme selection panel */
+#themePanel { position: fixed; top: 56px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
+#themePanel select { padding: 4px 6px; border: 1px solid rgba(0,0,0,0.2); border-radius: 6px; }
+.refresh-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.9; }
+.refresh-toggle input { accent-color: #333; }
+
+/* Image controls panel */
+#imagePanel { position: fixed; top: 100px; right: 12px; z-index: 3; background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); color: #111; backdrop-filter: blur(6px); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; gap: 8px; }
+#imagePanel input[type="file"] { max-width: 160px; }

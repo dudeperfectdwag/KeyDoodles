@@ -1,0 +1,103 @@
+<!-- “THIS FILE IS THE ACTIVE ENTRY POINT. DO NOT DUPLICATE.” -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Typing Canvas</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <button id="helpBtn" aria-label="Help" title="Help">?</button>
+    <button id="paraBtn" aria-label="Paragraphs" title="Paragraphs">¶</button>
+    <canvas id="canvas"></canvas>
+     <div id="shapePanel" aria-label="Shape selection">
+       <label for="shapeSelect">Shape:</label>
+       <select id="shapeSelect"></select>
+     </div>
+     <div id="themePanel" aria-label="Theme selection">
+       <label for="themeSelect">Theme:</label>
+       <select id="themeSelect"></select>
+       <label class="refresh-toggle" title="Reload page when theme changes">
+         <input id="autoRefreshToggle" type="checkbox" />
+         Auto refresh
+       </label>
+     </div>
+    <div id="stats">
+      <span id="statWpm">WPM: 0</span>
+      <span id="statAcc">Accuracy: 100%</span>
+      <span id="statChars">Chars: 0</span>
+      <span id="statTime">Time: 0.0s</span>
+      <span id="statStroke">Stroke: 1.00x</span>
+    </div>
+      <!-- Theme mascot (generic, not copyrighted) -->
+      <div id="mascot" aria-hidden="true">
+          <!-- Optional image mascot preview (user-provided) -->
+          <img id="mascotImg" alt="Mascot" style="display:none" />
+        <svg id="mascotSvg" viewBox="0 0 120 120" width="96" height="96">
+          <g id="m-body"><rect x="20" y="28" width="80" height="76" rx="12" ry="12" /></g>
+          <g id="m-eyes">
+            <circle cx="46" cy="62" r="6" />
+            <circle cx="74" cy="62" r="6" />
+          </g>
+          <!-- Accessories (shown per theme) -->
+          <g id="acc-hat" class="acc"><rect x="28" y="18" width="64" height="10" /><rect x="40" y="8" width="40" height="10" /></g>
+          <g id="acc-tie" class="acc"><polygon points="60,84 52,104 68,104" /></g>
+          <g id="acc-glasses" class="acc"><rect x="36" y="54" width="20" height="10" rx="3" /><rect x="64" y="54" width="20" height="10" rx="3" /><line x1="56" y1="59" x2="64" y2="59" /></g>
+          <g id="acc-bandana" class="acc"><polygon points="20,40 40,40 30,52" /></g>
+          <g id="acc-cape" class="acc"><path d="M20,48 C10,80 40,100 56,104 C72,100 96,80 84,48 Z" /></g>
+          <g id="acc-headphones" class="acc"><path d="M30,50 a20,20 0 0 1 60,0" /><circle cx="30" cy="62" r="8" /><circle cx="90" cy="62" r="8" /></g>
+          <g id="acc-star" class="acc"><polygon points="60,38 66,52 82,52 70,62 74,78 60,70 46,78 50,62 38,52 54,52" /></g>
+          <g id="acc-bow" class="acc"><polygon points="48,48 56,56 48,64" /><polygon points="72,48 64,56 72,64" /><circle cx="60" cy="56" r="4" /></g>
+          <g id="acc-badge" class="acc"><circle cx="86" cy="90" r="6" /></g>
+          <g id="acc-fangs" class="acc"><polygon points="54,70 58,78 50,78" /><polygon points="66,70 70,78 62,78" /></g>
+        </svg>
+      </div>
+    <!-- Image controls -->
+    <div id="imagePanel" aria-label="Image controls">
+      <label for="mascotImageInput">Mascot image:</label>
+      <input id="mascotImageInput" type="file" accept="image/*" />
+    </div>
+    <div id="helpModal" aria-hidden="true">
+      <div class="help-backdrop"></div>
+      <div class="help-content" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <button class="help-close" aria-label="Close">×</button>
+        <h2 id="helpTitle">How to Play</h2>
+        <p>Type anywhere. Each keypress moves the dot and draws shapes/curves on the canvas. Lines and shapes accumulate; the canvas never clears automatically.</p>
+        <h3>Stats</h3>
+        <ul>
+          <li><strong>WPM</strong>: Words per minute using the strict formula (chars/5 per minute).</li>
+          <li><strong>Accuracy</strong>: Correct characters vs. errors; backspace removes errors and characters.</li>
+          <li><strong>Characters</strong>: Count of valid typed characters minus backspaces.</li>
+          <li><strong>Time</strong>: Elapsed since the first valid keypress.</li>
+        </ul>
+        <h3>Shapes</h3>
+        <p>Use the Shape selector to choose what draws at the dot’s position. You can also use [ and ] to cycle, and number keys (1–9) for quick picks.</p>
+        <h3>Themes</h3>
+        <p>Use the Theme selector to change background and paint colors instantly across the canvas and UI. Your choice is saved to localStorage.</p>
+        <h3>Tips</h3>
+        <ul>
+          <li>Type faster to steer more dynamically.</li>
+          <li>Experiment with different shapes for generative art.</li>
+          <li>Use dark themes for low-light environments.</li>
+        </ul>
+      </div>
+    </div>
+    <div id="paraModal" aria-hidden="true">
+      <div class="help-backdrop"></div>
+      <div class="help-content" role="dialog" aria-modal="true" aria-labelledby="paraTitle">
+        <button class="help-close para-close" aria-label="Close">×</button>
+        <h2 id="paraTitle">Paragraph Mode</h2>
+        <div id="paraList"></div>
+      </div>
+    </div>
+    <aside id="paragraphView" aria-hidden="true">
+      <div class="pv-header">
+        <span id="pvTitle"></span>
+        <button id="pvExit" title="Free Mode">Free Mode</button>
+      </div>
+      <div id="pvText"></div>
+    </aside>
+    <script src="./app.js"></script>
+  </body>
+</html>
