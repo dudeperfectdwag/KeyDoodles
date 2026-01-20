@@ -1,0 +1,101 @@
+<!-- Removed -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Type Racing Offline</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <h1>Type Racing Offline</h1>
+      <div class="theme-toggle" id="themeToggle" title="Toggle theme">🌓</div>
+    </header>
+
+    <main>
+      <section id="viewHome" class="view active">
+        <div class="card">
+          <h2>Lobby</h2>
+          <div class="grid two">
+            <div>
+              <label>Name</label>
+              <input id="playerName" type="text" placeholder="Your name" />
+            </div>
+            <div>
+              <label>Bots</label>
+              <input id="botCount" type="number" min="1" max="15" value="5" />
+            </div>
+          </div>
+          <div class="grid two">
+            <div>
+              <label>Difficulty</label>
+              <select id="difficulty">
+                <option>Easy</option>
+                <option selected>Medium</option>
+                <option>Hard</option>
+                <option>Insane</option>
+              </select>
+            </div>
+            <div>
+              <label>Passage</label>
+              <select id="passageSelect"></select>
+            </div>
+          </div>
+          <div class="grid two">
+            <div>
+              <label><input id="useCustomText" type="checkbox" /> Use custom text</label>
+            </div>
+            <div>
+              <textarea id="customText" placeholder="Enter your own passage..." rows="3" disabled></textarea>
+            </div>
+          </div>
+          <h3>Select Vehicle</h3>
+          <div id="vehicleGrid" class="vehicle-grid"></div>
+          <div class="actions">
+            <button id="startBtn" class="primary">Start Race</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="viewRace" class="view">
+        <div class="card">
+          <h2>Race</h2>
+          <div id="countdown" class="overlay" aria-live="assertive" aria-label="Race countdown" hidden></div>
+          <div id="track" class="track"></div>
+          <div class="passage">
+            <p id="passageText"></p>
+            <textarea id="typingArea" placeholder="Type here..." rows="3"></textarea>
+          </div>
+          <div class="hud">
+            <div id="hudWpm">WPM: 0</div>
+          </div>
+          <div class="actions">
+            <button id="pauseBtn" class="secondary" aria-label="Pause or resume race">Pause</button>
+            <button id="audioToggle" class="secondary" aria-label="Toggle sound effects">Sound: On</button>
+            <button id="backToHome" class="secondary">Back</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="viewResults" class="view">
+        <div class="card">
+          <h2>Results</h2>
+          <ol id="resultsList"></ol>
+          <div class="actions">
+            <button id="exportResults" class="secondary">Export Results</button>
+            <button id="newRace" class="primary">New Race</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Offline Type Racing • Local-only</span>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
