@@ -552,6 +552,8 @@ console.log("APP JS LOADED");
     colorEl.addEventListener('input', ()=>{ colorEl.dataset.userPicked = '1'; });
     sizeEl.addEventListener('input', ()=>{});
     function setFreehand(on){ freehandOn = !!on; panel.classList.toggle('active', freehandOn); }
+    // Expose toggler for mobile default enable
+    if (window.__TC) { window.__TC.setFreehand = setFreehand; }
     if (toggleEl) toggleEl.addEventListener('change', ()=> setFreehand(toggleEl.checked));
     if (toggleBtn){
       const handler = ()=> setFreehand(!freehandOn);
@@ -698,6 +700,49 @@ console.log("APP JS LOADED");
     applyTheme,
     state
   };
+})();
+
+// Mobile overlay controls: collapse panels into gear on small screens (additive)
+(function(){
+  const mql = window.matchMedia('(max-width: 768px)');
+  const gearBtn = document.getElementById('mobileControlsBtn');
+  const overlay = document.getElementById('mobileControlsOverlay');
+  const container = document.getElementById('mobileControlsContainer');
+  const closeBtn = overlay ? overlay.querySelector('.mc-close') : null;
+  const backdrop = overlay ? overlay.querySelector('.mc-backdrop') : null;
+
+  const panels = ['shapePanel','themePanel','sketchPanel']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  const originalParents = new Map();
+  panels.forEach(el => { if (el && el.parentElement) originalParents.set(el, el.parentElement); });
+
+  function toMobile(){
+    if (!container) return;
+    panels.forEach(el => { if (el && el.parentElement !== container) container.appendChild(el); });
+    // Enable freehand by default on mobile
+    if (window.__TC && typeof window.__TC.setFreehand === 'function') { try{ window.__TC.setFreehand(true); }catch{} }
+  }
+  function toDesktop(){
+    panels.forEach(el => {
+      const parent = originalParents.get(el);
+      if (parent && el && el.parentElement !== parent) parent.appendChild(el);
+    });
+    if (overlay){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+  }
+  function updateMode(){
+    const isMobile = mql.matches;
+    if (isMobile){ if (gearBtn) gearBtn.style.display = 'grid'; toMobile(); }
+    else { if (gearBtn) gearBtn.style.display = 'none'; toDesktop(); }
+  }
+  if (gearBtn && overlay){
+    gearBtn.addEventListener('click', ()=>{ overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false'); });
+    closeBtn && closeBtn.addEventListener('click', ()=>{ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
+    backdrop && backdrop.addEventListener('click', ()=>{ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
+  }
+  if (mql.addEventListener) mql.addEventListener('change', updateMode); else mql.addListener(updateMode);
+  // initial application after DOM is ready
+  setTimeout(updateMode, 0);
 })();
 
 // Help modal behavior (non-intrusive)

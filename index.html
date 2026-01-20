@@ -108,6 +108,18 @@
         </ul>
       </div>
     </div>
+    <!-- Mobile controls: floating gear + overlay (mobile only) -->
+    <button id="mobileControlsBtn" aria-label="Controls" title="Controls">⚙️</button>
+    <div id="mobileControlsOverlay" aria-hidden="true">
+      <div class="mc-backdrop"></div>
+      <div class="mc-content" role="dialog" aria-modal="true" aria-labelledby="mcTitle">
+        <div class="mc-header">
+          <span id="mcTitle">Controls</span>
+          <button class="mc-close" aria-label="Close">×</button>
+        </div>
+        <div id="mobileControlsContainer"></div>
+      </div>
+    </div>
     <div id="paraModal" aria-hidden="true">
       <div class="help-backdrop"></div>
       <div class="help-content" role="dialog" aria-modal="true" aria-labelledby="paraTitle">

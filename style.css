@@ -84,3 +84,60 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 input[type="range"] { height: 8px; }
 input[type="range"]::-moz-range-track { height: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; }
 input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #dcdcdc; border: 1px solid rgba(0,0,0,0.25); }
+
+/* Mobile UI (overlay controls) */
+/* Hidden by default; shown via media query */
+#mobileControlsBtn { position: fixed; top: 12px; right: 12px; z-index: 6; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: rgba(0,0,0,0.08); color: #fff; cursor: pointer; display: none; place-items: center; font-size: 20px; }
+#mobileControlsBtn:hover { background: rgba(255,255,255,0.12); }
+#mobileControlsOverlay { position: fixed; inset: 0; z-index: 7; pointer-events: none; opacity: 0; transition: opacity 180ms ease; }
+#mobileControlsOverlay.open { pointer-events: auto; opacity: 1; }
+.mc-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.35); }
+.mc-content { position: absolute; top: 56px; right: 12px; width: min(88vw, 420px); max-height: 72vh; overflow: auto; background: rgba(255,255,255,0.92); color: #111; border: 1px solid rgba(0,0,0,0.15); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); backdrop-filter: blur(6px); padding: 10px 12px; }
+.mc-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,0.12); margin-bottom: 8px; }
+.mc-close { width: 32px; height: 32px; border: 1px solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); color: #111; cursor: pointer; border-radius: 6px; }
+.mc-close:hover { background: rgba(0,0,0,0.1); }
+
+@media (max-width: 768px) {
+	/* Finger-friendly sizes for toolbar buttons */
+	#helpBtn, #paraBtn, #musicBtn, #saveBtn, #clearBtn { width: 40px; height: 40px; font-size: 16px; }
+
+	/* Disable touch gestures on canvas to prevent scroll/pinch */
+	#canvas { touch-action: none; }
+
+	/* Collapse top-right controls into gear; hide fixed pills */
+	#shapePanel, #themePanel, #sketchPanel { display: none; }
+
+	/* Show floating gear button */
+	#mobileControlsBtn { display: grid; }
+
+	/* Inside mobile overlay, render controls vertically and larger */
+	#mobileControlsOverlay.open #mobileControlsContainer { display: flex; flex-direction: column; gap: 10px; }
+	#mobileControlsOverlay.open #shapePanel,
+	#mobileControlsOverlay.open #themePanel,
+	#mobileControlsOverlay.open #sketchPanel {
+		display: flex;
+		position: static;
+		background: rgba(0,0,0,0.06);
+		color: #111;
+		border-color: rgba(0,0,0,0.15);
+		box-shadow: none;
+		backdrop-filter: none;
+		width: auto;
+	}
+	#mobileControlsOverlay.open #shapePanel label,
+	#mobileControlsOverlay.open #themePanel label,
+	#mobileControlsOverlay.open #sketchPanel strong {
+		font-size: 16px;
+	}
+	#mobileControlsOverlay.open #shapePanel select,
+	#mobileControlsOverlay.open #themePanel select { font-size: 16px; padding: 8px 10px; }
+
+	/* Larger sliders and color input */
+	#mobileControlsOverlay.open #brushSize { width: 220px; }
+	#mobileControlsOverlay.open #brushColor { width: 64px; height: 32px; }
+	input[type="range"]::-webkit-slider-runnable-track { height: 12px; }
+	input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; margin-top: -6px; }
+	input[type="range"] { height: 12px; }
+	input[type="range"]::-moz-range-track { height: 12px; }
+	input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; }
+}
